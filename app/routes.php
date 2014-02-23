@@ -35,7 +35,8 @@ App::error(function($exception, $code)
 
 Route::get('/', function()
 {
-	return View::make('hello');
+	return "Main page"; 	
+	//return View::make('hello');
 });
 
 Route::get('login', function(){
