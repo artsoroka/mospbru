@@ -10,7 +10,7 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
-
+/*
 App::error(function($exception, $code)
 {
     switch ($code)
@@ -32,12 +32,25 @@ App::error(function($exception, $code)
         	return "it seems we've got some proplems "; 
     }
 });
-
+*/
 Route::get('/', function()
 {
 	return "Main page"; 	
 	//return View::make('hello');
 });
+
+
+Route::group(array('prefix' => 'admin', 'before' => 'auth'), function()
+{
+	Route::get('/', function(){ return View::make('admin.base'); }); 
+	Route::get('/suppliers',            'SuppliersController@index'); 
+	Route::get('/suppliers/new',        'SuppliersController@create_new');
+    Route::get('/suppliers/{id}/edit',  'SuppliersController@edit'); 
+    Route::post('/suppliers/{id}/edit',  'SuppliersController@update'); 
+    Route::get('/suppliers/{id}/delete', 'SuppliersController@destroy'); 
+
+});
+
 
 Route::get('login', function(){
     return View::make('admin.auth.login'); 
@@ -46,7 +59,7 @@ Route::get('login', function(){
 Route::post('login', function(){
     
         $rules = array(
-            'username'    => 'required', // make sure the email is an actual email
+            'login' => 'required', // make sure the email is an actual email
             'password' => 'required' // password can only be alphanumeric and has to be greater than 3 characters
         );
 
@@ -61,25 +74,36 @@ Route::post('login', function(){
 
             // create our user data for the authentication
             $userdata = array(
-                'username'     => Input::get('username'),
+                'login'     => Input::get('login'),
                 'password'  => Input::get('password')
             );
-            print_r($userdata); 
+
             // attempt to do the login
             if (Auth::attempt($userdata)) {
 
-                echo 'SUCCESS!';
+                return Redirect::to('admin'); 
 
             } else {        
-                echo "there is something... "; 
-                //return Redirect::to('login');
-
-
+                return View::make('admin.auth.login', array('myvar' => 'Your login or password is incorrect')); 
             }
 
         }
 
 }); 
+
+Route::get('logout', function(){
+
+    Auth::logout(); 
+    return Redirect::to('login'); 
+
+});
+
+Route::get('userstatus', function(){
+
+    return (Auth::user());  
+
+});
+
 
 Route::get('/userdata', function(){
 	echo Auth::user(); 
