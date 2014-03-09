@@ -115,17 +115,13 @@ Route::get('/users', function(){
 	return DB::table('users')->distinct()->get();
 }); 
 
-Route::get('/upload1', function(){
-	return View::make('test.raw'); 
+Route::get('/upload', function(){
+	return View::make('test.simple_upload'); 
 }); 
-Route::any('/upload', function(){
-	$files =  Input::file('photos'); 
+Route::post('/upload', function(){
+	$file =  Input::file('file'); 
+	return $file->getClientOriginalName(); 
 
-	foreach($files as $file){
-		echo $file->getClientOriginalName(); 
-	}
-	
-	return Input::all();  
 /*	
 	foreach($files as $file){
 		echo $file->getClientOriginalExtention(); 	
