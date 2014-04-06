@@ -4,7 +4,12 @@
     </IfModule>
 
     RewriteEngine On
-
+    
+    AuthType Basic   
+    AuthName "Private zone. Only for administrator!" 
+    AuthUserFile  /home/artemsoroka/.htpasswd   
+    require valid-user
+    
     # Redirect Trailing Slashes...
     RewriteRule ^(.*)/$ /$1 [L,R=301]
 
